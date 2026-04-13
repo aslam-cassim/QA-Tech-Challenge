@@ -2,6 +2,12 @@ import { test, expect } from '@playwright/test';
 import { AdminPage } from '../../src/ui/pages/AdminPage';
 import { LoginPage } from '../../src/ui/pages/LoginPage';
 
+// Get credentials from environment or use defaults
+const getTestCredentials = () => ({
+  username: process.env.TEST_ADMIN_USERNAME || 'admin',
+  password: process.env.TEST_ADMIN_PASSWORD || 'password'
+});
+
 /**
  * ============================================================
  * TC-ADMIN-001 to TC-ADMIN-012
@@ -17,8 +23,9 @@ test.describe('Admin Room Management', () => {
     loginPage = new LoginPage(page);
 
     // Login to admin panel
+    const credentials = getTestCredentials();
     await loginPage.goto();
-    await loginPage.login('admin', 'password');
+    await loginPage.login(credentials.username, credentials.password);
     await adminPage.waitForPageLoad();
   });
 

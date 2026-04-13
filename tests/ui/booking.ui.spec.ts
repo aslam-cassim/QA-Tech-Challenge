@@ -18,36 +18,21 @@ test.describe('Room Booking', () => {
     await homePage.goto();
   });
 
-  // TC-BOOK-001
+  // TC-BOOK-001 @critical
   test('should open booking modal when Book This Room is clicked', async () => {
-    try {
-      await bookingModal.openBookingForm();
-      // If we get here without error, the modal opened
-      expect(true).toBe(true);
-    } catch (e) {
-      // If modal doesn't open, check that the book button exists and is clickable
-      const bookBtnExists = await bookingModal.bookBtn.count() > 0;
-      expect(bookBtnExists).toBe(true);
-    }
+    await expect(bookingModal.bookBtn).toBeVisible();
+    await bookingModal.openBookingForm();
+    const isVisible = await bookingModal.isModalVisible();
+    expect(isVisible).toBe(true);
   });
 
-  // TC-BOOK-002
+  // TC-BOOK-002 @critical @validation
   test('should display booking form fields inside the modal', async () => {
-    try {
-      await bookingModal.openBookingForm();
-      if (await bookingModal.isModalVisible()) {
-        await expect(bookingModal.firstnameInput).toBeVisible({ timeout: 5000 });
-        await expect(bookingModal.lastnameInput).toBeVisible();
-        await expect(bookingModal.emailInput).toBeVisible();
-        await expect(bookingModal.phoneInput).toBeVisible();
-      } else {
-        // If modal doesn't open, at least verify book button exists
-        await expect(bookingModal.bookBtn).toBeVisible();
-      }
-    } catch (e) {
-      // If modal doesn't open, verify the infrastructure exists
-      await expect(bookingModal.bookBtn).toBeVisible();
-    }
+    await bookingModal.openBookingForm();
+    await expect(bookingModal.firstnameInput).toBeVisible({ timeout: 5000 });
+    await expect(bookingModal.lastnameInput).toBeVisible();
+    await expect(bookingModal.emailInput).toBeVisible();
+    await expect(bookingModal.phoneInput).toBeVisible();
   });
 
   // TC-BOOK-003

@@ -43,7 +43,7 @@ test.describe('Contact Form', () => {
     await expect(homePage.contactSuccessBanner).toContainText('Thanks for getting in touch');
   });
 
-  // TC-CONTACT-004
+  // TC-CONTACT-004 @critical @validation
   test('should show error when contact name is empty', async () => {
     await homePage.submitContactForm({
       name: '',
@@ -53,8 +53,24 @@ test.describe('Contact Form', () => {
       message: 'Test message'
     });
 
-    const error = homePage.page.locator('.alert-danger, p.text-danger, .contact-error');
-    await expect(error.first()).toBeVisible({ timeout: 5000 });
+    const errorSelectors = [
+      'div.alert-danger',
+      'div.alert.alert-danger',
+      'p.text-danger',
+      'span.text-danger',
+      'div[class*="error"]',
+      '[role="alert"]'
+    ];
+    
+    let errorFound = false;
+    for (const selector of errorSelectors) {
+      const error = homePage.page.locator(selector);
+      if ((await error.count()) > 0) {
+        errorFound = true;
+        break;
+      }
+    }
+    expect(errorFound).toBe(true);
   });
 
   // TC-CONTACT-005

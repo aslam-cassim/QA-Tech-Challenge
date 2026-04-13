@@ -3,6 +3,12 @@ import { LoginPage } from '../../src/ui/pages/LoginPage.js';
 import { DataGenerator } from '../../src/utils/DataGenerator.js';
 import { logger } from '../../src/utils/Logger.js';
 
+// Get credentials from environment or use defaults
+const getTestCredentials = () => ({
+  username: process.env.TEST_ADMIN_USERNAME || 'admin',
+  password: process.env.TEST_ADMIN_PASSWORD || 'password'
+});
+
 test.describe('Login UI Tests', () => {
   let loginPage: LoginPage;
 
@@ -11,8 +17,9 @@ test.describe('Login UI Tests', () => {
     await loginPage.navigate();
   });
 
+  // TC-LOGIN-001 @critical @authentication
   test('should login with valid credentials', async ({ page }) => {
-    const credentials = DataGenerator.generateCredentials();
+    const credentials = getTestCredentials();
     logger.info('Attempting login with:', { username: credentials.username });
 
     await loginPage.login(credentials.username, credentials.password);
